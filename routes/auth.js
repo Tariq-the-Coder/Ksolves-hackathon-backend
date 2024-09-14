@@ -56,10 +56,35 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ id: user._id, role: user.role }, 'secret', { expiresIn: '1h' });
 
     // Send the token as response
-    res.json({ token });
+    res.json({ token, user });
   } catch (error) {
     res.status(500).send('An error occurred while logging in');
     console.error('Error logging in:', error);
+  }
+});
+
+// Find user by username
+router.get('/findByUsername', async (req, res) => {
+  const { username } = req.query;
+
+  // Validate input
+  if (!username) {
+    return res.status(400).send('Username is required');
+  }
+
+  try {
+    // Find the user
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Send the user ID as response
+    res.json({ _id: user._id });
+  } catch (error) {
+    res.status(500).send('An error occurred while finding the user');
+    console.error('Error finding user:', error);
   }
 });
 
