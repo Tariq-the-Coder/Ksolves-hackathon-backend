@@ -32,5 +32,8 @@ app.use('/api/classes', classRoutes);
 app.use('/api/units', unitRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/comments', commentRoutes);
+app.get("/", (req, res) => {
+  res.send(`server is ready.`);
+});
 
 app.listen(5000, () => console.log('Server running on port 5000'));
