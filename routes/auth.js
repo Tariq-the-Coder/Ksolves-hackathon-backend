@@ -52,16 +52,24 @@ router.post('/login', async (req, res) => {
       return res.status(401).send('Invalid credentials');
     }
 
-    // Generate a JWT token
-    const token = jwt.sign({ id: user._id, role: user.role }, 'secret', { expiresIn: '1h' });
+    // Check if the user is an instructor
+    const instructorId = user.role === 'instructor' ? user._id : null;
+
+    // Generate a JWT token, including instructorId in the payload
+    const token = jwt.sign(
+      { id: user._id, role: user.role, instructorId }, 
+      'secret', 
+      { expiresIn: '1h' }
+    );
 
     // Send the token as response
-    res.json({ token, user });
+    res.json({ token });
   } catch (error) {
     res.status(500).send('An error occurred while logging in');
     console.error('Error logging in:', error);
   }
 });
+
 
 // Find user by username
 router.get('/findByUsername', async (req, res) => {
