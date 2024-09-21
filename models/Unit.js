@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const unitSchema = new Schema({
-  name: { type: String, required: true },
-  classId: { type: Schema.Types.ObjectId, ref: 'Class', required: true },
+  title: { type: String, required: true },
+  sessions: [{ type: Schema.Types.ObjectId, ref: 'Session' }], // Array of session IDs
 });
 
 module.exports = mongoose.model('Unit', unitSchema);

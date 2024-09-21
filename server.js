@@ -10,6 +10,7 @@ const classRoutes = require('./routes/class');
 const unitRoutes = require('./routes/unit');
 const sessionRoutes = require('./routes/session');
 const commentRoutes = require('./routes/comment');
+const lectureRoutes = require('./routes/lecture');
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use('/api/classes', classRoutes);
 app.use('/api/units', unitRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/comments', lectureRoutes);
 app.get("/", (req, res) => {
   res.send(`server is ready.`);
 });
