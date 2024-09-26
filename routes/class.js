@@ -56,6 +56,21 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 
 // Route to delete a class
+router.delete('/:id', async (req, res) => {
+  try {
+    const classId = req.params.id;
+    const deletedClass = await Class.findByIdAndDelete(classId);
+
+    if (!deletedClass) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    res.status(200).json({ message: 'Class deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting class', error });
+  }
+});
+
 // Route to get class details (only for enrolled students or the instructor)
 router.get('/:id', authMiddleware, async (req, res) => {
   const classId = req.params.id;
@@ -181,15 +196,17 @@ router.post('/:id/units/:unitId/sessions', authMiddleware, async (req, res) => {
     const unit = cls.units.id(unitId);
     if (!unit) return res.status(404).send('Unit not found');
 
-    // Add the session to the unit
-    unit.sessions.push({ title });
+    // Add the session to the unit and explicitly set unitId
+    unit.sessions.push({ title, unitId });
     await cls.save();
 
     res.status(200).json(unit.sessions);
   } catch (error) {
+    console.error('Error adding session:', error); // Check the logs for this error
     res.status(500).send('Error adding session');
   }
 });
+
 
 // Get class details with units and sessions
 router.get('/:id', authMiddleware, async (req, res) => {
